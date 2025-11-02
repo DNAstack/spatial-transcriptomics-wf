@@ -210,9 +210,9 @@ task check_output_files_exist {
 			adata_file=$(echo "${output_files}" | cut -f 2)
 			qc_adata_file=$(echo "${output_files}" | cut -f 3)
 
-			if gsutil -u ~{billing_project} ls "${spaceranger_counts_file}"; then
-				if gsutil -u ~{billing_project} ls "${adata_file}"; then
-					if gsutil -u ~{billing_project} ls "${qc_adata_file}"; then
+			if gcloud storage ls --billing-project=~{billing_project} "${spaceranger_counts_file}"; then
+				if gcloud storage ls --billing-project=~{billing_project} "${adata_file}"; then
+					if gcloud storage ls --billing-project=~{billing_project} "${qc_adata_file}"; then
 						# If we find all outputs, don't rerun anything
 						echo -e "true\ttrue\ttrue" >> sample_preprocessing_complete.tsv
 					else
