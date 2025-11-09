@@ -39,7 +39,7 @@ workflow cohort_analysis {
 	}
 
 	String sub_workflow_name = "cohort_analysis"
-	String sub_workflow_version = "1.0.0"
+	String sub_workflow_version = "1.0.1"
 
 	Array[Array[String]] workflow_info = [[run_timestamp, workflow_name, workflow_version, workflow_release]]
 
@@ -273,7 +273,7 @@ task merge_and_plot_qc_metrics {
 	}
 
 	runtime {
-		docker: "~{container_registry}/spatial_py:1.0.0"
+		docker: "~{container_registry}/spatial_py:1.0.1"
 		cpu: 2
 		memory: "~{mem_gb} GB"
 		disks: "local-disk ~{disk_size} HDD"
@@ -354,7 +354,7 @@ task filter_and_normalize {
 	}
 
 	runtime {
-		docker: "~{container_registry}/spatial_py:1.0.0"
+		docker: "~{container_registry}/spatial_py:1.0.1"
 		cpu: 4
 		memory: "~{mem_gb} GB"
 		disks: "local-disk ~{disk_size} HDD"
@@ -420,7 +420,7 @@ task plot_spatial {
 	}
 
 	runtime {
-		docker: "~{container_registry}/spatial_py:1.0.0"
+		docker: "~{container_registry}/spatial_py:1.0.1"
 		cpu: 2
 		memory: "~{mem_gb} GB"
 		disks: "local-disk ~{disk_size} HDD"

@@ -14,9 +14,16 @@ def main(args):
     ##########################
     adata = sc.read_h5ad(args.adata_input)
 
+    n_comps = args.n_comps
+    if adata.n_obs < n_comps or adata.n_vars < n_comps:
+        n_comps = min(n_comps, adata.n_obs - 1, adata.n_vars - 1)
+        print(f"[INFO] Detected small dimensions (n_obs={adata.n_obs}, n_vars={adata.n_vars}). Setting n_comps={n_comps}.")
+    else:
+        print(f"[INFO] Computing the nearest neighbors distance matrix with default settings (n={n_comps}).")
+
     sc.pp.neighbors(
         adata,
-        n_pcs=args.n_comps,
+        n_pcs=n_comps,
     )
     sc.tl.umap(adata)
 

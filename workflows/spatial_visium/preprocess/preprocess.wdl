@@ -461,7 +461,7 @@ task counts_to_adata {
 	}
 
 	runtime {
-		docker: "~{container_registry}/spatial_py:1.0.0"
+		docker: "~{container_registry}/spatial_py:1.0.1"
 		cpu: 2
 		memory: "4 GB"
 		disks: "local-disk ~{disk_size} HDD"
@@ -526,7 +526,7 @@ task qc {
 	}
 
 	runtime {
-		docker: "~{container_registry}/spatial_py:1.0.0"
+		docker: "~{container_registry}/spatial_py:1.0.1"
 		cpu: threads
 		memory: "~{mem_gb} GB"
 		disks: "local-disk ~{disk_size} HDD"

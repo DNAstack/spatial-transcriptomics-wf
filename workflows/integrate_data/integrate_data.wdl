@@ -92,7 +92,7 @@ task integrate_sample_data {
 	}
 
 	runtime {
-		docker: "~{container_registry}/spatial_py:1.0.0"
+		docker: "~{container_registry}/spatial_py:1.0.1"
 		cpu: 4
 		memory: "~{mem_gb} GB"
 		disks: "local-disk ~{disk_size} HDD"
@@ -155,7 +155,7 @@ task cluster {
 	}
 
 	runtime {
-		docker: "~{container_registry}/spatial_py:1.0.0"
+		docker: "~{container_registry}/spatial_py:1.0.1"
 		cpu: 4
 		memory: "~{mem_gb} GB"
 		disks: "local-disk ~{disk_size} HDD"

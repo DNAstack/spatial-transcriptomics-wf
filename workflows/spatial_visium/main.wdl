@@ -31,7 +31,7 @@ workflow spatial_visium_analysis {
 
 	String workflow_execution_path = "workflow_execution"
 	String workflow_name = "spatial_visium"
-	String workflow_version = "v1.0.0"
+	String workflow_version = "v1.0.1"
 	String workflow_release = "https://github.com/ASAP-CRN/spatial-transcriptomics-wf/releases/tag/spatial_visium_analysis-~{workflow_version}"
 
 	call GetWorkflowMetadata.get_workflow_metadata {

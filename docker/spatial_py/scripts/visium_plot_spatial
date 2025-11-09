@@ -15,6 +15,13 @@ def main(args):
     colors = ["total_counts", "n_genes_by_counts", "batch", "leiden"]
     titles = [f"{slide} - {color}" for slide in slides for color in colors]
 
+    # Clean up
+    present_slides = adata.obs["visium_slide_ref"].unique()
+    all_slides = list(adata.uns["spatial"].keys())
+    for slide in all_slides:
+        if slide not in present_slides:
+            del adata.uns["spatial"][slide]
+
     sq.pl.spatial_scatter(
         adata,
         library_key="visium_slide_ref",

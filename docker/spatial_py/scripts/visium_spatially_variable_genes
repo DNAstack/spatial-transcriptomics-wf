@@ -15,26 +15,42 @@ def main(args):
     adata = sc.read_h5ad(args.adata_input)
 
     genes = adata.var_names[adata.var["highly_variable"]].tolist()
+
+    # Check spots per slide
+    spots_per_slide = adata.obs["visium_slide_ref"].value_counts()
+    print("Spots per slide:")
+    print(spots_per_slide)
+    slides_to_keep = spots_per_slide[spots_per_slide >= 4].index.tolist()
+    adata_filtered = adata[adata.obs["visium_slide_ref"].isin(slides_to_keep)].copy()
+
     sq.gr.spatial_neighbors(
-        adata,
+        adata_filtered,
         library_key="visium_slide_ref",
         coord_type="generic",
         delaunay=True,
     )
     sq.gr.spatial_autocorr(
-        adata,
+        adata_filtered,
         mode="moran",
         genes=genes,
         n_perms=100,
         n_jobs=1,
     )
-    top_10_variable_genes = adata.uns["moranI"].head(10)
+    top_10_variable_genes = adata_filtered.uns["moranI"].head(10)
 
-    top_4_variable_gene_list = adata.uns["moranI"].head(4).index.tolist()
-    slides = adata.obs["visium_slide_ref"].unique().tolist()
+    top_4_variable_gene_list = adata_filtered.uns["moranI"].head(4).index.tolist()
+    slides = adata_filtered.obs["visium_slide_ref"].unique().tolist()
     titles = [f"{slide} - {color}" for slide in slides for color in top_4_variable_gene_list]
+
+    # Clean up
+    present_slides = adata_filtered.obs["visium_slide_ref"].unique()
+    all_slides = list(adata_filtered.uns["spatial"].keys())
+    for slide in all_slides:
+        if slide not in present_slides:
+            del adata_filtered.uns["spatial"][slide]
+            
     sq.pl.spatial_scatter(
-        adata,
+        adata_filtered,
         library_key="visium_slide_ref",
         color=top_4_variable_gene_list,
         title=titles,
@@ -43,9 +59,9 @@ def main(args):
 
     # Save table and adata object
     top_10_variable_genes.to_csv(f"{args.cohort_id}.moran_top_10_variable_genes.csv")
-    metadata = adata.obs
+    metadata = adata_filtered.obs
     metadata.to_csv(f"{args.cohort_id}.final_metadata.csv")
-    adata.write_h5ad(filename=args.adata_output, compression="gzip")
+    adata_filtered.write_h5ad(filename=args.adata_output, compression="gzip")
 
 
 if __name__ == "__main__":

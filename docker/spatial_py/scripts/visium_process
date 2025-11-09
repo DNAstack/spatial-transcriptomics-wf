@@ -72,9 +72,17 @@ def main(args):
     ##############################
     ## DIMENSIONALITY REDUCTION ##
     ##############################
+    n_comps = args.n_comps
+    if hvg_adata.n_obs < n_comps or hvg_adata.n_vars < n_comps:
+        n_comps = min(n_comps, hvg_adata.n_obs - 1, hvg_adata.n_vars - 1)
+        print(f"[INFO] Detected small dimensions (n_obs={hvg_adata.n_obs}, n_vars={hvg_adata.n_vars}). Setting n_comps={n_comps}.")
+        print(f"[WARNING] PCA might not be meaningful since dataset is small (e.g., <30 cells) or check filters.")
+    else:
+        print(f"[INFO] Running PCA with default settings (n={n_comps}).")
+
     sc.pp.pca(
         hvg_adata,
-        n_comps=args.n_comps,
+        n_comps=n_comps,
         svd_solver="arpack",
     )
 
