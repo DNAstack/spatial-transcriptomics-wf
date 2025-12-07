@@ -23,6 +23,13 @@ def main(args):
     slides_to_keep = spots_per_slide[spots_per_slide >= 4].index.tolist()
     adata_filtered = adata[adata.obs["visium_slide_ref"].isin(slides_to_keep)].copy()
 
+    # Remove NaNs
+    nan_mask = np.isnan(adata_filtered.obsm["spatial"]).any(axis=1)
+    if nan_mask.any():
+        n_nan = nan_mask.sum()
+        adata_filtered = adata_filtered[~nan_mask].copy()
+        print(f"Removed {n_nan} observations with NaN coordinates ({adata_filtered.shape[0]} remaining)")
+
     sq.gr.spatial_neighbors(
         adata_filtered,
         library_key="visium_slide_ref",
