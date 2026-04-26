@@ -33,6 +33,7 @@ workflow spatial_visium_analysis {
 	String workflow_name = "spatial_visium"
 	String workflow_version = "v1.0.1"
 	String workflow_release = "https://github.com/ASAP-CRN/spatial-transcriptomics-wf/releases/tag/spatial_visium_analysis-~{workflow_version}"
+	String crn_release_version = "v4.0.0"
 
 	call GetWorkflowMetadata.get_workflow_metadata {
 		input:
@@ -44,9 +45,9 @@ workflow spatial_visium_analysis {
 
 		call Preprocess.preprocess {
 			input:
-				team_id = project.team_id,
-				dataset_id = project.dataset_id,
-				dataset_doi_url = project.dataset_doi_url,
+				team_id = project.asap_team_id,
+				dataset_id = project.asap_dataset_id,
+				dataset_doi_url = project.asap_dataset_doi_url,
 				samples = project.samples,
 				spaceranger_reference_data = spaceranger_reference_data,
 				visium_probe_set_csv = visium_probe_set_csv,
@@ -77,7 +78,7 @@ workflow spatial_visium_analysis {
 		if (project.run_project_cohort_analysis) {
 			call CohortAnalysis.cohort_analysis as project_cohort_analysis {
 				input:
-					cohort_id = project.team_id,
+					cohort_id = project.asap_team_id,
 					project_sample_ids = preprocess.project_sample_ids,
 					preprocessed_adata_objects = preprocess.qc_adata_object,
 					preprocessing_output_file_paths = preprocessing_output_file_paths,
@@ -93,6 +94,7 @@ workflow spatial_visium_analysis {
 					workflow_name = workflow_name,
 					workflow_version = workflow_version,
 					workflow_release = workflow_release,
+					crn_release_version = crn_release_version,
 					run_timestamp = get_workflow_metadata.timestamp,
 					raw_data_path_prefix = project_raw_data_path_prefix,
 					staging_data_buckets = project.staging_data_buckets,
@@ -151,7 +153,7 @@ workflow spatial_visium_analysis {
 	}
 
 	meta {
-		description: "Harmonized human postmortem-derived brain sequencing (PMDBS) and non-human spatial transcriptomics workflow for 10x Visium data"
+		description: "Harmonized human postmortem-derived brain sequencing (PMDBS) and non-human spatial transcriptomics workflow for 10x Visium data."
 	}
 
 	parameter_meta {

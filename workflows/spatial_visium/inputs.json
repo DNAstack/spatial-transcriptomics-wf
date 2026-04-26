@@ -1,5 +1,5 @@
 {
-  "spatial_visium_analysis.projects": "Array[WomCompositeType {\n team_id -> String\ndataset_id -> String\nsamples -> Array[WomCompositeType {\n fastq_I1s -> Array[File]\nsample_id -> String\nfastq_R1s -> Array[File]+\nbatch -> String?\nvisium_capture_area -> String\nvisium_brightfield_image -> File\nfastq_I2s -> Array[File]\nvisium_slide_serial_number -> String\nfastq_R2s -> Array[File]+ \n}]\nstaging_data_buckets -> Array[String]\nrun_project_cohort_analysis -> Boolean\ndataset_doi_url -> String\nraw_data_bucket -> String \n}]",
+  "spatial_visium_analysis.projects": "Array[WomCompositeType {\n samples -> Array[WomCompositeType {\n fastq_I1s -> Array[File]\nfastq_R1s -> Array[File]+\nsample_id -> String\nbatch -> String?\nvisium_capture_area -> String\nvisium_brightfield_image -> File\nfastq_I2s -> Array[File]\nvisium_slide_serial_number -> String\nfastq_R2s -> Array[File]+ \n}]\nasap_dataset_id -> String\nrun_project_cohort_analysis -> Boolean\nraw_data_bucket -> String\nasap_team_id -> String\nstaging_data_buckets -> Array[String]\nasap_dataset_doi_url -> String \n}]",
   "spatial_visium_analysis.spaceranger_reference_data": "File",
   "spatial_visium_analysis.visium_probe_set_csv": "File? (optional)",
   "spatial_visium_analysis.filter_cells_min_counts": "Int (optional, default = 5000)",

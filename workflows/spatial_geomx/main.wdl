@@ -43,6 +43,7 @@ workflow spatial_geomx_analysis {
 	String workflow_name = "spatial_geomx"
 	String workflow_version = "v1.0.0"
 	String workflow_release = "https://github.com/ASAP-CRN/spatial-transcriptomics-wf/releases/tag/spatial_geomx_analysis-~{workflow_version}"
+	String crn_release_version = "v4.0.0"
 
 	call GetWorkflowMetadata.get_workflow_metadata {
 		input:
@@ -54,11 +55,11 @@ workflow spatial_geomx_analysis {
 
 		call Preprocess.preprocess {
 			input:
-				team_id = project.team_id,
-				dataset_id = project.dataset_id,
-				dataset_doi_url = project.dataset_doi_url,
+				team_id = project.asap_team_id,
+				dataset_id = project.asap_dataset_id,
+				dataset_doi_url = project.asap_dataset_doi_url,
 				slides = project.slides,
-				project_sample_metadata_csv = project.project_sample_metadata_csv,
+				project_sample_metadata_csv = project.asap_project_sample_metadata_csv,
 				geomx_config_ini = project.geomx_config_ini,
 				geomxngs_config_pkc = geomxngs_config_pkc,
 				min_segment_reads = min_segment_reads,
@@ -115,7 +116,7 @@ workflow spatial_geomx_analysis {
 		if (project.run_project_cohort_analysis) {
 			call CohortAnalysis.cohort_analysis as project_cohort_analysis {
 				input:
-					cohort_id = project.team_id,
+					cohort_id = project.asap_team_id,
 					project_sample_ids = preprocess.project_sample_ids,
 					processed_adata_objects = process_to_adata.processed_adata_objects,
 					preprocessing_output_file_paths = preprocessing_output_file_paths,
@@ -127,6 +128,7 @@ workflow spatial_geomx_analysis {
 					workflow_name = workflow_name,
 					workflow_version = workflow_version,
 					workflow_release = workflow_release,
+					crn_release_version = crn_release_version,
 					run_timestamp = get_workflow_metadata.timestamp,
 					raw_data_path_prefix = project_raw_data_path_prefix,
 					staging_data_buckets = project.staging_data_buckets,
@@ -182,7 +184,7 @@ workflow spatial_geomx_analysis {
 	}
 
 	meta {
-		description: "Harmonized human postmortem-derived brain sequencing (PMDBS) and non-human spatial transcriptomics workflow for Nanostring GeoMx data"
+		description: "Harmonized human postmortem-derived brain sequencing (PMDBS) and non-human spatial transcriptomics workflow for Nanostring GeoMx data."
 	}
 
 	parameter_meta {

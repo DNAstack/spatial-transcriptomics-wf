@@ -25,6 +25,7 @@ workflow cohort_analysis {
 		String workflow_name
 		String workflow_version
 		String workflow_release
+		String crn_release_version
 		String run_timestamp
 		String raw_data_path_prefix
 		Array[String] staging_data_buckets
@@ -94,7 +95,7 @@ workflow cohort_analysis {
 		input:
 			output_file_paths = preprocessing_output_file_paths,
 			staging_data_buckets = staging_data_buckets,
-			staging_data_path = "~{workflow_name}/preprocess",
+			staging_data_path = "~{workflow_name}/release/~{crn_release_version}/preprocess",
 			billing_project = billing_project,
 			zones = zones
 	}
@@ -103,7 +104,7 @@ workflow cohort_analysis {
 		input:
 			output_file_paths = processing_output_file_paths,
 			staging_data_buckets = staging_data_buckets,
-			staging_data_path = "~{workflow_name}/process_to_adata",
+			staging_data_path = "~{workflow_name}/release/~{crn_release_version}/process_to_adata",
 			billing_project = billing_project,
 			zones = zones
 	}
@@ -132,7 +133,7 @@ workflow cohort_analysis {
 		input:
 			output_file_paths = cohort_analysis_final_output_paths,
 			staging_data_buckets = staging_data_buckets,
-			staging_data_path = "~{workflow_name}/~{sub_workflow_name}",
+			staging_data_path = "~{workflow_name}/release/~{crn_release_version}/~{sub_workflow_name}",
 			billing_project = billing_project,
 			zones = zones
 	}
@@ -178,6 +179,7 @@ workflow cohort_analysis {
 		workflow_name: {help: "Workflow name; stored in the file-level manifest and final manifest with all saved files."}
 		workflow_version: {help: "Workflow version; stored in the file-level manifest and final manifest with all saved files."}
 		workflow_release: {help: "GitHub release; stored in the file-level manifest and final manifest with all saved files."}
+		crn_release_version: {help: "CRN Cloud release version; used to organize outputs and for the CRN Cloud release."}
 		run_timestamp: {help: "UTC timestamp; stored in the file-level manifest and final manifest with all saved files."}
 		raw_data_path_prefix: {help: "Raw data bucket path prefix; location of raw bucket to upload task outputs to (`<raw_data_bucket>/workflow_execution/cohort_analysis`)."}
 		staging_data_buckets: {help: "Array of staging data buckets to upload intermediate files to (i.e., DEV or UAT buckets depending on internal QC status)."}

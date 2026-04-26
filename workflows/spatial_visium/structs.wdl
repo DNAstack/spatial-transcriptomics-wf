@@ -15,9 +15,9 @@ struct Sample {
 }
 
 struct Project {
-	String team_id
-	String dataset_id
-	String dataset_doi_url
+	String asap_team_id
+	String asap_dataset_id
+	String asap_dataset_doi_url
 	Array[Sample] samples
 
 	Boolean run_project_cohort_analysis

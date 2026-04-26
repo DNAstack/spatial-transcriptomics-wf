@@ -11,19 +11,19 @@ struct Sample {
 }
 
 struct Slide {
-	String slide_id
+	String asap_slide_id
 	File geomx_lab_annotation_xlsx
 
 	Array[Sample] samples
 }
 
 struct Project {
-	String team_id
-	String dataset_id
-	String dataset_doi_url
+	String asap_team_id
+	String asap_dataset_id
+	String asap_dataset_doi_url
 	Array[Slide] slides
 
-	File project_sample_metadata_csv
+	File asap_project_sample_metadata_csv
 	File geomx_config_ini
 
 	Boolean run_project_cohort_analysis

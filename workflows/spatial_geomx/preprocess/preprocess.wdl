@@ -49,9 +49,9 @@ workflow preprocess {
 	String qc_raw_data_path = "~{workflow_raw_data_path_prefix}/qc/~{qc_task_version}"
 
 	scatter (slide_object in slides) {
-		String fastq_to_dcc_output = "~{dcc_raw_data_path}/~{slide_object.slide_id}.geomxngs_out_dir.tar.gz"
-		String dcc_to_rds_output = "~{rds_raw_data_path}/~{slide_object.slide_id}.NanoStringGeoMxSet.rds"
-		String qc_output = "~{qc_raw_data_path}/~{slide_object.slide_id}.qc.rds"
+		String fastq_to_dcc_output = "~{dcc_raw_data_path}/~{slide_object.asap_slide_id}.geomxngs_out_dir.tar.gz"
+		String dcc_to_rds_output = "~{rds_raw_data_path}/~{slide_object.asap_slide_id}.NanoStringGeoMxSet.rds"
+		String qc_output = "~{qc_raw_data_path}/~{slide_object.asap_slide_id}.qc.rds"
 	}
 
 	# For each sample, outputs an array of true/false: [fastq_to_dcc_complete, dcc_to_rds_complete, qc_complete]
@@ -78,13 +78,13 @@ workflow preprocess {
 		String dcc_to_rds_complete = check_output_files_exist.sample_preprocessing_complete[slide_index][1]
 		String qc_complete = check_output_files_exist.sample_preprocessing_complete[slide_index][2]
 
-		String fastq_to_dcc_geomxngs_dcc_zip = "~{dcc_raw_data_path}/~{slide.slide_id}.DCC.zip"
-		String fastq_to_dcc_geomxngs_output_tar_gz = "~{dcc_raw_data_path}/~{slide.slide_id}.geomxngs_out_dir.tar.gz"
+		String fastq_to_dcc_geomxngs_dcc_zip = "~{dcc_raw_data_path}/~{slide.asap_slide_id}.DCC.zip"
+		String fastq_to_dcc_geomxngs_output_tar_gz = "~{dcc_raw_data_path}/~{slide.asap_slide_id}.geomxngs_out_dir.tar.gz"
 
 		if (fastq_to_dcc_complete == "false") {
 			call fastq_to_dcc {
 				input:
-					slide_id = slide.slide_id,
+					slide_id = slide.asap_slide_id,
 					fastq_R1s = flatten(fastq_R1s),
 					fastq_R2s = flatten(fastq_R2s),
 					geomx_config_ini = geomx_config_ini,
@@ -99,14 +99,14 @@ workflow preprocess {
 		File geomxngs_dcc_zip_output = select_first([fastq_to_dcc.geomxngs_dcc_zip, fastq_to_dcc_geomxngs_dcc_zip]) #!FileCoercion
 		File geomxngs_output_tar_gz_output = select_first([fastq_to_dcc.geomxngs_output_tar_gz, fastq_to_dcc_geomxngs_output_tar_gz]) #!FileCoercion
 
-		String dcc_to_rds_object = "~{rds_raw_data_path}/~{slide.slide_id}.NanoStringGeoMxSet.rds"
+		String dcc_to_rds_object = "~{rds_raw_data_path}/~{slide.asap_slide_id}.NanoStringGeoMxSet.rds"
 
 		if (dcc_to_rds_complete == "false") {
 			call dcc_to_rds {
 				input:
 					team_id = team_id,
 					dataset_id = dataset_id,
-					slide_id = slide.slide_id,
+					slide_id = slide.asap_slide_id,
 					project_sample_metadata_csv = project_sample_metadata_csv,
 					geomxngs_dcc_zip = geomxngs_dcc_zip_output,
 					geomx_lab_annotation_xlsx = slide.geomx_lab_annotation_xlsx,
@@ -121,15 +121,15 @@ workflow preprocess {
 
 		File initial_rds_object_output = select_first([dcc_to_rds.initial_rds_object, dcc_to_rds_object]) #!FileCoercion
 
-		String qc_metrics_rds_object = "~{qc_raw_data_path}/~{slide.slide_id}.qc.rds"
-		String qc_segment_summary_csv = "~{qc_raw_data_path}/~{slide.slide_id}.segment_qc_summary.csv"
-		String qc_probe_summary_csv = "~{qc_raw_data_path}/~{slide.slide_id}.probe_qc_summary.csv"
-		String qc_gene_count_csv = "~{qc_raw_data_path}/~{slide.slide_id}.gene_count.csv"
+		String qc_metrics_rds_object = "~{qc_raw_data_path}/~{slide.asap_slide_id}.qc.rds"
+		String qc_segment_summary_csv = "~{qc_raw_data_path}/~{slide.asap_slide_id}.segment_qc_summary.csv"
+		String qc_probe_summary_csv = "~{qc_raw_data_path}/~{slide.asap_slide_id}.probe_qc_summary.csv"
+		String qc_gene_count_csv = "~{qc_raw_data_path}/~{slide.asap_slide_id}.gene_count.csv"
 
 		if (qc_complete == "false") {
 			call qc {
 				input:
-					slide_id = slide.slide_id,
+					slide_id = slide.asap_slide_id,
 					initial_rds_object = initial_rds_object_output,
 					min_segment_reads = min_segment_reads,
 					min_percent_reads_trimmed = min_percent_reads_trimmed,
